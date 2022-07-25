@@ -25,7 +25,57 @@ Unnecessary packages should not be installed in the container.
 Kubernetes Threat Modeling
 Given Kubernetes' system components and the STRIDE framework, identify five potential threats that may arise.
 
+1. Spoofing — Kubernetes ships with insecure defaults, for example, all pods have `CAP_NET_RAW` permissions. 
+This allows all pods to open raw sockets and inject malicious packets into the Kubernetes container network, 
+which may lead to spoofing.
+
+2. Repudiation — Kubernetes natively doesn't allow certificate revocation, which may lead to repudiation 
+if a certificate cannot be revoked when necessary.
+
+3. Denial of Service — Kubernetes ships without an upper limit for setting the memory footprint. 
+This may lead to a denial of service which could result in exhausting resources needed to run the pod.
+
+4. Information Disclosure — Major approaches focuses on being able to read secret data from the cluster directly 
+by exploiting misconfigured RBAC permissions. Other approaches include viewing sensitive data stored within 
+logs and eavesdropping on network traffic.
+
+5. Elevation of Privilege — Several Kubernetes distributions have made the decision that they don’t consider 
+malicious containers part of their threat model. As such, once an attacker has that level of access then 
+there are minimal controls, by default, stopping them from getting full cluster-admin rights. Ensure that 
+all management ports visible oin the cluster network require authentication for all users.
+
 Docker-bench Run Results and Analysis
 From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden 
 based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be 
 different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
+
+Answers:
+
+2.1 Ensure network traffic is restricted between containers on the default bridge
+Description - By default, all network traffic is allowed between containers on the same host on the default network bridge. 
+If not desired, restrict all inter-container communication. Link specific containers together that require communication. 
+Alternatively, you can create custom network and only join containers that need to communicate to that custom network.
+
+Remediation:
+
+Edit the Docker daemon configuration file to ensure that icc is disabled. It should include the following setting
+
+"icc": false
+
+3.16 Ensure that the Docker socket file permissions are set to 660 or more restrictively
+
+Remediation:
+
+run
+
+chmod 660 /var/run/docker.sock
+
+4.5 Ensure Content trust for Docker is Enabled (Scored)
+
+Description - Content trust is disabled by default and should be enabled in line with organizational security policy.
+
+Remediation:
+
+run
+
+export DOCKER_CONTENT_TRUST=1

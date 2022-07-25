@@ -51,16 +51,16 @@ different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
 
 Answers:
 
-2.1 Ensure network traffic is restricted between containers on the default bridge
-Description - By default, all network traffic is allowed between containers on the same host on the default network bridge. 
-If not desired, restrict all inter-container communication. Link specific containers together that require communication. 
-Alternatively, you can create custom network and only join containers that need to communicate to that custom network.
+2.16 Ensure Userland Proxy is Disabled (Scored)
+
+Description - The Docker daemon starts a userland proxy service for port forwarding whenever a port is exposed. 
+Where hairpin NAT is available, this service is generally superfluous to requirements and can be disabled.
 
 Remediation:
 
-Edit the Docker daemon configuration file to ensure that icc is disabled. It should include the following setting
+Edit the Docker daemon configuration file or run
 
-"icc": false
+dockerd --userland-proxy=false
 
 3.16 Ensure that the Docker socket file permissions are set to 660 or more restrictively
 

@@ -1,0 +1,22 @@
+1. Incident commander name:
+- Teerapat Prommarak
+
+2. Executive Summary of what happened: 
+- These 3 pods are deployed using an insecure docker image with crypto-mining code and the pod names are: 
+cryptotonight, minergate and moneropool.
+
+3. Summary of what was affected:
+- The attacker was able to urge control of the cluster and run these containers on the cluster. 
+The Attackers are after computing assets to manhandle for crypto-mining. 
+Monero crypto-mining containers, particularly minergate, moneropool, and xmrpooldotnet.
+
+4. Summary of the impact:
+- We have got into an outage of all our services due to the danger pod.
+
+5. Summary of the remediation steps:
+- Using kube-bench and docker-bench we was able to identify what's happening and using CIS Docker Benchmark
+and CIS Rancher Benchmark 
+
+6. Summary of lessons learned:
+- It is good to have a monitoring tool setup like the Grafana dashboards to visualize what is happening in the
+system. It would be helpful to have alerts from Falco in Grafana for events like these.
